@@ -6,22 +6,29 @@ var display2;
 
 ws.onopen = function(){
 	console.log("Websocket opened");
-	ws.send("Hello, world");
 };
+
+// Gestione messaggi in arrivo da Python
 
 ws.onmessage = function(ev){
 	data=JSON.parse(ev.data);
 	
-	//console.log(data);
-	
 	if (data.target=="display1") {
 		display1.setValue(data.value.toString());
-		console.log(data.value.toString());
 	}	
 
 	if (data.target=="display2") {
 		display2.setValue(data.value.toString());
 	}	
+
+	if (data.target=="abs_inc") {
+		$("#abs_inc").text(data.value.toString());
+	}	
+
+	if (data.target=="mm_inch") {
+		$("#mm_inch").text(data.value.toString());
+	}	
+
 };
 
 ws.onclose = function(ev){
@@ -68,13 +75,13 @@ $(document).ready(function() {
 	display2.setValue("0");
 
 	$("#abs_inc").click(function(){
-		data={"pushbutton":"abs_inc", "value" :$("#abs_inc").text()};
+		data={"event":"click","id":"abs_inc", "value" :$("#abs_inc").text()};
 		a=JSON.stringify(data);
 		ws.send(a);
 	});
 
 	$("#mm_inch").click(function(){
-		data={"pushbutton": "mm_inch","value" : $("#mm_inch").text()};
+		data={"event":"click","id": "mm_inch","value" : $("#mm_inch").text()};
 		a=JSON.stringify(data);
 		ws.send(a);
 	}); 

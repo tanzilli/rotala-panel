@@ -4,6 +4,7 @@ import tornado.websocket
 import time
 import threading
 import json
+import sys
 
 ws=None
 t_exit=False
@@ -29,11 +30,6 @@ def counter():
 			data = json.dumps(data)
 			ws.write_message(data)
 
-def sergioloop():
-	while True:
-		time.sleep(0.1)
-		print "Ciao"		
-
 class SocketHandler(tornado.websocket.WebSocketHandler):
 	def check_origin(self, origin):
 		return True
@@ -43,12 +39,37 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 		ws=self
 		print "Websocket opened"
 
+	# Gestione dei messaggi in ricezione dal Chromium
+
 	def on_message(self, message):
-		#data=json.loads(message)
-		#print(data["pushbutton"])
-		#print(data["value"])
-		#self.write_message(u"You said: " + message)
-		pass
+		#print message
+		data=json.loads(message)
+		
+		if data["event"]=="click":
+			if data["id"]=="abs_inc": 
+				if data["value"]=="ABS":
+					data = {"target": "abs_inc", "value" : "INC"}
+					print "ABS"
+				else:
+					data = {"target": "abs_inc", "value" : "ABS"}
+					print "INC"
+
+				data = json.dumps(data)
+				ws.write_message(data)
+				return
+
+		if data["event"]=="click":
+			if data["id"]=="mm_inch": 
+				if data["value"]=="MM":
+					data = {"target": "mm_inch", "value" : "INCH"}
+					print "INCH"
+				else:
+					data = {"target": "mm_inch", "value" : "MM"}
+					print "MM"
+
+				data = json.dumps(data)
+				ws.write_message(data)
+				return
 	
 	def on_close(self):
 		print "Websocket closed"
@@ -65,7 +86,7 @@ try:
 	application.listen(80,"0.0.0.0")
 	tornado.ioloop.IOLoop.instance().start()
 	
-except KeyboardInterrupt:
-	print "Keyboard interrupt"	
+except:
+	print("Unexpected error:", sys.exc_info()[0])
 	t_exit=True
 	t.join()
