@@ -29,6 +29,13 @@ ws.onmessage = function(ev){
 		$("#mm_inch").text(data.value.toString());
 	}	
 
+	if (data.target=="button_units") {
+		$("#button_units").attr("src",data.value.toString());
+	}	
+	
+	if (data.target=="button_mode") {
+		$("#button_mode").attr("src",data.value.toString());
+	}	
 };
 
 ws.onclose = function(ev){
@@ -82,6 +89,18 @@ $(document).ready(function() {
 
 	$("#mm_inch").click(function(){
 		data={"event":"click","id": "mm_inch","value" : $("#mm_inch").text()};
+		a=JSON.stringify(data);
+		ws.send(a);
+	}); 
+
+	$("#button_units").click(function(){
+		data={"event":"click","id":"button_units", "value" :$("#button_units").attr("src")};
+		a=JSON.stringify(data);
+		ws.send(a);
+	});
+
+	$("#button_mode").click(function(){
+		data={"event":"click","id": "button_mode","value" : $("#button_mode").attr("src")};
 		a=JSON.stringify(data);
 		ws.send(a);
 	}); 

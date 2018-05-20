@@ -72,6 +72,33 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 				data = json.dumps(data)
 				ws.write_message(data)
 				return
+
+		if data["event"]=="click":
+			if data["id"]=="button_units": 
+				if data["value"]=="images/mm.jpg":
+					data = {"target": "button_units", "value" : "images/inch.jpg"}
+					print "Unit inch"
+				else:
+					data = {"target": "button_units", "value" : "images/mm.jpg"}
+					print "Unit mm"
+
+				data = json.dumps(data)
+				ws.write_message(data)
+				return
+
+		if data["event"]=="click":
+			if data["id"]=="button_mode": 
+				if data["value"]=="images/abs.jpg":
+					data = {"target": "button_mode", "value" : "images/inc.jpg"}
+					print "Mode inc"
+				else:
+					data = {"target": "button_mode", "value" : "images/abs.jpg"}
+					print "Mode abs"
+
+				data = json.dumps(data)
+				ws.write_message(data)
+				return
+
 	
 	def on_close(self):
 		print "Websocket closed"
