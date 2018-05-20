@@ -10,9 +10,18 @@ ws.onopen = function(){
 };
 
 ws.onmessage = function(ev){
-	//console.log("Message");
-	//console.log(ev);
-	display1.setValue(ev.data);
+	data=JSON.parse(ev.data);
+	
+	//console.log(data);
+	
+	if (data.target=="display1") {
+		display1.setValue(data.value.toString());
+		console.log(data.value.toString());
+	}	
+
+	if (data.target=="display2") {
+		display2.setValue(data.value.toString());
+	}	
 };
 
 ws.onclose = function(ev){
@@ -58,5 +67,16 @@ $(document).ready(function() {
 
 	display2.setValue("0");
 
-	
+	$("#abs_inc").click(function(){
+		data={"pushbutton":"abs_inc", "value" :$("#abs_inc").text()};
+		a=JSON.stringify(data);
+		ws.send(a);
+	});
+
+	$("#mm_inch").click(function(){
+		data={"pushbutton": "mm_inch","value" : $("#mm_inch").text()};
+		a=JSON.stringify(data);
+		ws.send(a);
+	}); 
+
 });
